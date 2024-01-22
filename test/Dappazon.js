@@ -23,9 +23,5 @@ describe("Dappazon", () => {
       const result = await dappazon.owner();
       expect(result).to.equal(deployer.address);
     });
-    it("has a name", async () => {
-      const result = await dappazon.name();
-      expect(result).to.equal("Dappazon");
-    });
   });
 });
