@@ -23,6 +23,7 @@ contract Dappazon {
     mapping(address => uint256) public orderCount;
     mapping(address => mapping(uint256 => Order)) public orders;
 
+    event Buy(address buyer, uint256 orderId, uint256 itemId);
     event List(string name, uint256 cost, uint256 quantity);
 
     modifier onlyOwner() {
@@ -69,6 +70,12 @@ contract Dappazon {
         // Fetch item (retrieve item from mapping)
         Item memory item = items[_id];
 
+        // Require enough ether to buy item
+        require(msg.value >= item.cost);
+
+        // Require item is in stock
+        require(item.stock > 0);
+
         // Create an order
         Order memory order = Order(block.timestamp, item);
 
@@ -80,6 +87,7 @@ contract Dappazon {
         items[_id].stock = item.stock - 1;
 
         // Emit event
+        emit Buy(msg.sender, orderCount[msg.sender], item.id);
     }
 
     // Withdraw funds

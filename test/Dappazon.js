@@ -75,11 +75,6 @@ describe("Dappazon", () => {
       await transaction.wait();
     });
 
-    it("Updates the contract balance", async () => {
-      const result = await ethers.provider.getBalance(dappazon.address);
-      expect(result).to.equal(COST);
-    });
-
     it("Updates the buyer's order count", async () => {
       const result = await dappazon.orderCount(buyer.address);
       expect(result).to.equal(1);
@@ -89,6 +84,15 @@ describe("Dappazon", () => {
       const order = await dappazon.orders(buyer.address, 1);
       expect(order.time).to.be.greaterThan(0);
       expect(order.item.name).to.equal(NAME);
+    });
+
+    it("Updates the contract balance", async () => {
+      const result = await ethers.provider.getBalance(dappazon.address);
+      expect(result).to.equal(COST);
+    });
+
+    it("Emits Buy event", async () => {
+      expect(transaction).to.emit(dappazon, "Buy");
     });
   });
 });
