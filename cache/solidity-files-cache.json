@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/kellyn/Desktop/dappazon/contracts/Dappazon.sol": {
-      "lastModificationDate": 1706002238781,
-      "contentHash": "7d890ee60cb160f9d3f3cf77d57589f8",
+      "lastModificationDate": 1706013499486,
+      "contentHash": "c7046ff71242fac4bf88a724909aa30a",
       "sourceName": "contracts/Dappazon.sol",
       "solcConfig": {
         "version": "0.8.17",
