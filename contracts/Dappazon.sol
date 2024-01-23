@@ -91,4 +91,12 @@ contract Dappazon {
     }
 
     // Withdraw funds
+    function withdraw() public onlyOwner {
+        (bool success, ) = owner.call{value: address(this).balance}("");
+        require(success);
+    }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
 }
