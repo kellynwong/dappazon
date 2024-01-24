@@ -8,9 +8,35 @@ import close from "../assets/close.svg";
 
 const Product = ({ item, provider, account, dappazon, togglePop }) => {
   const [order, setOrder] = useState(null);
-  const buyHandler = async () => {
-    console.log("buying");
+  const [hasBought, setHasBought] = useState(false);
+
+  // To reload all of the information from blockchain
+  const fetchDetails = async () => {
+    const events = await dappazon.queryFilter("Buy");
+    const orders = events.filter(
+      (event) =>
+        event.args.buyer === account &&
+        event.args.itemId.toString() === item.id.toString()
+    );
+
+    if (orders.length === 0) return;
+    const order = await dappazon.orders(account, orders[0].args.orderId);
+    setOrder(order);
   };
+
+  const buyHandler = async () => {
+    // Click and talk to blockchain, look at test file for codes
+    const signer = await provider.getSigner();
+    let transaction = await dappazon
+      .connect(signer)
+      .buy(item.id, { value: item.cost });
+    await transaction.wait();
+    setHasBought(true);
+  };
+
+  useEffect(() => {
+    fetchDetails();
+  }, [hasBought]);
 
   return (
     <div className="product">
