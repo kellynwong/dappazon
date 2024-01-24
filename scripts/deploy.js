@@ -24,18 +24,23 @@ async function main() {
 
   // List items...
   for (let i = 0; i < items.length; i++) {
+    // items here are from "../src/items.json" file
     const transaction = await dappazon.connect(deployer).list(
       items[i].id,
+      items[i].name,
       items[i].category,
       items[i].image,
-      items[i].price,
       tokens(items[i].price), // to store in wei
       items[i].rating,
       items[i].stock
     );
     await transaction.wait();
-    console.log(`Listed item ${items[i].id}: ${items[i].name}`);
+    console.log(
+      `Listed item ${items[i].id}: ${items[i].name}, Price: ${items[i].price}, Category: ${items[i].category}`
+    );
   }
+  console.log(await dappazon.items(1));
+  console.log(await dappazon.items(2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

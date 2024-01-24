@@ -16,6 +16,13 @@ function App() {
   const [account, setAccount] = useState(null);
   const [dappazon, setDappazon] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [electronics, setElectronics] = useState(null);
+  const [toys, setToys] = useState(null);
+  const [clothing, setClothing] = useState(null);
+
+  const togglePop = () => {
+    console.log("togglePop..");
+  };
 
   const loadBlockchainData = async () => {
     // Connect to blockchain
@@ -26,13 +33,24 @@ function App() {
 
     // Connect to smart contracts (create JS versions so can call functions)
     const dappazon = new ethers.Contract(
-      config[network.chainId].dappazon.address, // so just use network.chainId to access 31337
+      config[network.chainId].dappazon.address, // just use network.chainId to access 31337 , and dappazon.address is where the smart contract has been deployed to
       Dappazon,
       provider
     );
     setDappazon(dappazon);
 
     // Load products
+    let items = [];
+    for (var i = 0; i < 9; i++) {
+      const item = await dappazon.items(i + 1);
+      items.push(item);
+    }
+    const electronics = items.filter((item) => item.category === "electronics");
+    const clothing = items.filter((item) => item.category === "clothing");
+    const toys = items.filter((item) => item.category === "toys");
+    setElectronics(electronics);
+    setClothing(clothing);
+    setToys(toys);
   };
 
   useEffect(() => {
@@ -43,6 +61,21 @@ function App() {
     <div>
       <Navigation account={account} setAccount={setAccount} />
       <h2>Dappazon Best Sellers</h2>
+      {electronics && clothing && toys && (
+        <>
+          <Section
+            title={"Clothing & Jewelry"}
+            items={clothing}
+            togglePop={togglePop}
+          />
+          <Section
+            title={"Electronic & Gadgets"}
+            items={electronics}
+            togglePop={togglePop}
+          />
+          <Section title={"Toys & Gaming"} items={toys} togglePop={togglePop} />
+        </>
+      )}
     </div>
   );
 }
